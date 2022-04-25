@@ -31,8 +31,10 @@ notesCtrl.createNote = async (req, res) => {
 
 notesCtrl.showNotes = async (req, res) => {
     var notes;
+    var users;
     if (req.user.id == "62606911757dead6a033a7b1" || req.user.id == "626068b0757dead6a033a7ad") {
         notes = await Note.find().lean();
+        users = await User.find().lean();
     } else {
         var notesP = await Note.find({ user: req.user.id }).lean();
         var notesP1 = await Note.find({ user: 'adm' }).lean();
@@ -44,7 +46,7 @@ notesCtrl.showNotes = async (req, res) => {
         notes = notes.concat(notesP)
         //console.log(notes)
     }
-    res.render('notes/allNotes', { notes })
+    res.render('notes/allNotes', { notes, users })
 }
 
 notesCtrl.renderEditNote = async (req, res) => {

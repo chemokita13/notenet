@@ -10,7 +10,6 @@ passport.use(new localStrategy({
     if(!user){user = await User.findOne({name:email})}
     //console.log(user)
     if (!user){
-        console.log("error user")
         return done(null, false, {message: 'E-mail or user not found.'})
     }else{
         // match passwords

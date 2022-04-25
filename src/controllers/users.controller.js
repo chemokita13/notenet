@@ -72,4 +72,22 @@ usersCtrl.logOut = (req, res) => {
     res.redirect('/users/login')
 }
 
+usersCtrl.dlt = async (req, res)=>{
+    await User.findByIdAndDelete(req.params.id);
+    res.redirect('/notes')
+}
+
+usersCtrl.renderEditUser = async (req, res)=>{
+    const user = await User.findById(req.params.id).lean()
+    res.render('user/editUser', {user})
+    console.log(user)
+}
+
+usersCtrl.updateUser = async (req, res)=> {
+    console.log(req.body)
+    const { name, email } = req.body
+    await User.findByIdAndUpdate(req.params.id, { name:name, email: email })
+    res.redirect('/notes')
+}
+
 module.exports = usersCtrl
