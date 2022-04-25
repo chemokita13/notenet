@@ -1,0 +1,75 @@
+const usersCtrl = {};
+const User = require('../models/user')
+const Note = require('../models/note')
+const passport = require('passport')
+
+usersCtrl.renderSignUp = (req, res) => {
+    res.render('user/signup')
+}
+
+usersCtrl.signUp = async (req, res) => {
+    //console.log(req.body)
+    const errors = []
+    const errorscp = []
+    const errorsnm = [];
+    const errorsem = [];
+    const { name, email, password, password2 } = req.body
+    var exporter = {};
+
+    if (password != password2) { errorscp.push({ text: 'Passwords do not match' }) }
+    if (password.length < 5) { errors.push({ text: "Pasword is too short" }) }
+    if (name == '') { errorsnm.push({ text: "Username is necessary" }) }
+    if (email == '') { errorsem.push({ text: "E-mail is necessary" }) }
+
+    //more errors
+    if (errors.length == 0) { Object.assign(exporter, { password }) } else { Object.assign(exporter, { errors }) }
+    if (errorscp.length == 0) { Object.assign(exporter, { password2 }) } else { Object.assign(exporter, { errorscp }) }
+    if (errorsnm.length == 0) { Object.assign(exporter, { name }) } else { Object.assign(exporter, { errorsnm }) }
+    if (errorsem.length == 0) { Object.assign(exporter, { email }) } else { Object.assign(exporter, { errorsem }) }
+    if (errors.length != 0 || errorscp.length != 0 || errorsnm.length != 0 || errorsem != 0) { res.render('user/signUp', exporter) }
+    else {
+        const emailUser = await User.findOne({ email: email })
+        const userName = await User.findOne({ name: name })
+        if (emailUser) {
+            req.flash('error_msg', "This e-mail is alredy in use.")
+            res.redirect('/users/signup')
+        } else {
+            if (userName) { 
+                req.flash('error_msg', "This username is alredy in use.")
+                res.redirect('/users/signup')
+            } else {
+                const newUser = new User({ name, email, password })
+                newUser.password = await newUser.encryptPassword(password)
+                await newUser.save();
+                console.log(email)
+                //nota de bienvenida
+                const CrtUser = await User.findOne({ email: email }).lean()
+                console.log(CrtUser._id)
+                var title = `Hello ${name}!`
+                var description = 'For info, go up to: home. The cards with *Admin* title are not editables.'
+                const newNote = await new Note({ title, description, user: CrtUser._id, editable: true })
+                await newNote.save()
+
+                req.flash('added_msg', "Account created successfully")
+                res.redirect('/users/login')
+            }
+        }
+    }
+}
+
+usersCtrl.renderLogIn = (req, res) => {
+    res.render('user/login')
+}
+
+usersCtrl.logIn = passport.authenticate('local', {
+    failureRedirect: '/users/login',
+    successRedirect: '/notes',
+    failureFlash: true
+})
+usersCtrl.logOut = (req, res) => {
+    req.logout();
+    req.flash('added_msg', 'You Log Out successfully')
+    res.redirect('/users/login')
+}
+
+module.exports = usersCtrl

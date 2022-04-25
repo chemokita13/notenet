@@ -1,0 +1,52 @@
+
+#borde {
+    margin-left: 1cm;
+}
+
+#img-pencil {
+    margin-left: 0.5cm;
+    margin-bottom: 0.5cm;
+    color: #adb5bd;
+
+}
+
+#linea {
+    color: white;
+    background-color: rgb(175, 171, 171);
+}
+
+#nav-title {
+    right: 1cm;
+}
+
+#carta {
+    margin: 0.1cm;
+}
+
+#btn-close{
+    margin-left: 2.5cm;
+}
+
+#dropdownMenu2{
+    color:rgb(0, 0, 0);
+    font-size: 2.5ch;
+}
+
+#btn-close-edit{
+    margin-left: 2cm;
+}
+/** #e74c3c **/
+#error{
+    height: 30px;
+}
+
+#text{
+    color: #e74c3c;
+}
+
+#footer{
+    padding-right: 0; 
+    padding-left: 0;
+    left:0px;
+    bottom:0px;
+}

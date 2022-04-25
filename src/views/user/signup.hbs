@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                Create Account
+            </div>
+            <div class="card-body">
+                <form action="/users/signup" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="Username" value="{{name}}">
+                        {{#each errorsnm}}
+                        <div>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                <div id="text">{{text}}</div>
+                            </small>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" placeholder="e-mail" value="{{email}}">
+                        {{#each errorsem}}
+                        <div>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                <div id="text">{{text}}</div>
+                            </small>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password" value="{{password}}">
+                        {{#each errors}}
+                        <div>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+
+                                <div id="text">{{text}}</div>
+
+                            </small>
+                        </div>
+                        {{/each}}
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            It must be longer than 5 characters and without spaces, or emoji.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password2" placeholder="Confirm password" value="{{password2}}">
+                        {{#each errorscp}}
+                        <div>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+
+                                <div id="text">{{text}}</div>
+
+                            </small>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Sign Up
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

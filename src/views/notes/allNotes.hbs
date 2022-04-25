@@ -1,0 +1,36 @@
+<div class="row">
+    <!-- cart add -->
+    <div class="coll-md-3" id="carta" style="height: 162.58px; padding: 0 0 162.58px;">
+        <div class="card">
+            <div class="card-body">
+                <a href="notes/add">
+                    <button class="btn btn-outline-light btn-block-btn-xl" style="height: 120px; width: 120px;">
+                        <div class="rounded-circle">
+                            <i class="fa-solid fa-plus fa-2xl"></i>
+                        </div>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    {{#each notes}}
+    <div class="coll-md-3" id="carta">
+        <div class="card">
+            <div class="card-body">
+                <h4 class=" d-flex justify-content-between align-items-center">
+                    {{title }}
+                    <u><a href="/notes/edit/{{_id}}" class="link-light"><i class="fa fa-pencil fa-xm"
+                                id="img-pencil"></i></a></u>
+                </h4>
+                <p>{{description}}</p>
+                <form action="/notes/delete/{{_id}}?_method=DELETE" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger btn-block btn-sm">
+                        delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>

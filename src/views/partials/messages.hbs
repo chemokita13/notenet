@@ -1,0 +1,40 @@
+{{#if added_msg}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{added_msg}}
+    <a href="">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </a>
+</div>
+{{/if}}
+{{#if error_msg}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{error_msg}} <br> If you already have account, please go to <a href="/users/login" class="alert-link">login</a>
+    <a href="">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </a>
+</div>
+{{/if}}
+{{#if errors}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{errors}} &nbsp; Please, try again.
+    <a href="">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </a>
+</div>
+{{/if}}
+{{#if errorrd_msg}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{errorrd_msg}}
+    <a href="">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </a>
+</div>
+{{/if}}
