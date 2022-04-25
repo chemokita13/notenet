@@ -1,4 +1,3 @@
-
 #borde {
     margin-left: 1cm;
 }
@@ -23,30 +22,44 @@
     margin: 0.1cm;
 }
 
-#btn-close{
+#btn-close {
     margin-left: 2.5cm;
 }
 
-#dropdownMenu2{
-    color:rgb(0, 0, 0);
+#dropdownMenu2 {
+    color: rgb(0, 0, 0);
     font-size: 2.5ch;
 }
 
-#btn-close-edit{
+#btn-close-edit {
     margin-left: 2cm;
 }
+
 /** #e74c3c **/
-#error{
+#error {
     height: 30px;
 }
 
-#text{
+#text {
     color: #e74c3c;
 }
 
-#footer{
-    padding-right: 0; 
+#footer {
+    padding-right: 0;
     padding-left: 0;
-    left:0px;
-    bottom:0px;
+    left: 0px;
+    bottom: 0px;
+}
+
+bordeA {
+
+    left: 5cm;
+    padding-top: 60px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 60px;
+}
+
+textoA {
+    text-align: center;
 }
