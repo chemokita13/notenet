@@ -10,7 +10,7 @@ const passport = require('passport')
 const app = express();
 require('./config/passport')
 // sets
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 5000)
 app.set('views', path.join(__dirname, 'views'))
 app.engine('.hbs', exphbs.engine({
     defaultLayout: 'main',
@@ -31,6 +31,7 @@ app.use(session({
 app.use(flash(passport.initialize()))
 app.use(passport.session())
 app.use(flash())
+
 // global vars
 app.use((req, res, next)=>{
     res.locals.added_msg = req.flash('added_msg')
@@ -43,8 +44,10 @@ app.use((req, res, next)=>{
 
 // urls
 app.use(require('./routes/index.routes'));
+app.use(require('./routes/support.routes'));
 app.use(require('./routes/notes.routes'));
 app.use(require('./routes/users.routes'));
+
 // static files
 app.use(express.static(path.join(__dirname, 'public')))
 
