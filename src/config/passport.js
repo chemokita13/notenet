@@ -15,7 +15,12 @@ passport.use(new localStrategy({
         // match passwords
         const match = await user.matchPassword(password, user.password)
         if(match){
-            return done(null, user)
+            if(user.status == 'VERIFIED' || user.status == 'NonCreated'){
+                return done(null, user)
+            }else{
+                return done(null, false, {message: 'You have to verify your email.'})
+            }
+            
         }else{
             return done(null, false, {message: 'Password is not correct.'})
         }

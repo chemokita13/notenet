@@ -5,6 +5,8 @@ const UserEsquema = new Schema({
     name:{type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
+    code: { type: String, required: true },
+    status: { type: String, required: true, default: 'NonCreated' }
 }, {timestamps: true
 });
 

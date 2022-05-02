@@ -2,6 +2,9 @@ const usersCtrl = {};
 const User = require('../models/user')
 const Note = require('../models/note')
 const passport = require('passport')
+const { v4: uuidv4 } = require('uuid');
+const { getToken, getTokenData } = require('../config/jwt.config');
+const { getTemplateConfirm, sendEmailConfirm } = require('../config/mail.config');
 
 // render signUp form (src/views/usersignup.hbs)
 usersCtrl.renderSignUp = (req, res) => {
@@ -40,9 +43,14 @@ usersCtrl.signUp = async (req, res) => {
                 req.flash('error_msg', "This username is alredy in use.")
                 res.redirect('/users/signup')
             } else { // if there are not any errors
-                const newUser = new User({ name, email, password }) // create the users schema
+                const code = uuidv4()
+                const newUser = new User({ name, email, password, code }) // create the users schema
+                const token = getToken({ email, code });
+                const template = getTemplateConfirm(name, token);
+                await sendEmailConfirm(email, 'Confirm your e-mail.', template);
                 // encrypt password
                 newUser.password = await newUser.encryptPassword(password)
+                newUser.status = "UNVERIFIED"
                 // save user
                 await newUser.save();
                 //welcome note
@@ -53,7 +61,7 @@ usersCtrl.signUp = async (req, res) => {
                 const newNote = await new Note({ title, description, user: CrtUser._id, editable: true })
                 await newNote.save()
                 // alert and redirect
-                req.flash('added_msg', "Account created successfully")
+                req.flash('added_msg', "An e-mail was sent to your adress to confirm your account.")
                 res.redirect('/users/login')
             }
         }
@@ -91,6 +99,50 @@ usersCtrl.updateUser = async (req, res)=> {
     const { name, email } = req.body
     await User.findByIdAndUpdate(req.params.id, { name:name, email: email })
     res.redirect('/notes')
+}
+
+usersCtrl.confirmUser = async (req, res) => {
+    try {
+
+        // Obtener el token
+        const { token } = req.params;
+        
+        // Verificar la data
+        const data = await getTokenData(token);
+ 
+        if(data === null) {
+            req.flash('errorrd_msg', "An error was happened. (V8)")
+            res.redirect('/')
+        }
+ 
+        console.log(data);
+ 
+        const { email, code } = data.data;
+ 
+        // Verificar existencia del usuario
+        const user = await User.findOne({ email }) || null;
+ 
+        if(user === null) {
+            req.flash('errorrd_msg', "An error was happened. (V9)")
+        }
+ 
+        // Verificar el código
+        if(code !== user.code) {
+             return res.redirect('/');
+        }
+ 
+        // Actualizar usuario
+        user.status = 'VERIFIED';
+        await user.save();
+ 
+        // Redireccionar a la confirmación
+        req.flash('added_msg', 'Your account has been verified.')
+        return res.redirect('/');
+         
+     } catch (error) {
+         console.log(error);
+         req.flash('errorrd_msg', "An error was happened. (V10)")
+     }
 }
 
 module.exports = usersCtrl

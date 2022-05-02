@@ -1,5 +1,6 @@
 const supportCtrl = {}
 const nodemailer = require('nodemailer');
+const { getTemplateSupport, sendEmailSupport } = require('../config/mail.config');
 
 
 supportCtrl.renderForm = (req, res) => {
@@ -13,43 +14,15 @@ supportCtrl.renderForm = (req, res) => {
 }
 
 supportCtrl.sendMail = async (req, res) => {
-    const { name, email, phone, message } = req.body;
+    const { name, email, message } = req.body;
 
-    contentHTML = `
-        <h1>User Information</h1>
-        <ul>
-            <li>Username: ${name}</li>
-            <li>User Email: ${email}</li>
-        </ul>
-        <h2>Problem</h2>
-        <p>${message}</p>
-    `;
+    let html = getTemplateSupport(name,email,message)
 
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.ionos.es',
-        port: 587,
-        secure: false,
-        auth: {
-            user: 'support@notenet.es',
-            pass: process.env.PASSWORDEMAIL
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
-
-    let info = await transporter.sendMail({
-        from: '"NoteNet" <support.sender@notenet.es>', // sender address,
-        to: `support.sender@notenet.es`,
-        subject: 'Problem',
-        html: contentHTML
-    })
-
+    let info = sendEmailSupport(html)
     console.log('Message sent: %s', info.messageId);
     
     req.flash('added_msg', "Message sent successfully")
     res.redirect('/')
-    //res.render('support/mailSent');
 }
 
 module.exports = supportCtrl
