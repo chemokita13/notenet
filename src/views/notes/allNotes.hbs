@@ -17,6 +17,7 @@
     <div class="coll-md-3" id="carta">
         <div class="card">
             <div class="card-body">
+                {{#if username}}<a href="/users/edit/{{user}}">{{username}}</a>{{/if}}
                 <h4 class=" d-flex justify-content-between align-items-center">
                     {{title }}
                     <u><a href="/notes/edit/{{_id}}" class="link-light"><i class="fa fa-pencil fa-xm"
@@ -46,7 +47,7 @@
                     {{name}}
                     <u>
                         <a href="/users/edit/{{_id}}" class="link-light">
-                            <i class="fa fa-pencil fa-xm" id="img-pencil"></i>
+                            <i class="fa fa-pencil" id="img-pencil"></i>
                         </a>
                     </u>
                 </h4>
