@@ -11,7 +11,7 @@ notesCtrl.createNote = async (req, res) => {
     else {
         const newNote = new Note({ title, description })
         console.log(req.user.id)
-        if (req.user.id == "62606911757dead6a033a7b1" || req.user.id == "626068b0757dead6a033a7ad") {
+        if (req.user.id == '62606911757dead6a033a7b1' || req.user.id == "626068b0757dead6a033a7ad") {
             if (title == '//private') {
                 newNote.user = 'adminP';
                 newNote.editable = true;
@@ -32,14 +32,16 @@ notesCtrl.createNote = async (req, res) => {
 notesCtrl.showNotes = async (req, res) => {
     var notes;
     var users;
+    var notesA;
     if (req.user.id == "62606911757dead6a033a7b1" || req.user.id == "626068b0757dead6a033a7ad") {
-        notes = await Note.find().lean();
-        notes.forEach(async (note) => {
+        notesA = await Note.find().lean();
+        notesA = notesA.filter((note)=>note.user != 'adm')
+        notesA.forEach(async (note) => {
             const userNote = await User.findById(note.user)
             note.username = userNote.name
             note.useremail = userNote.email
-            console.log(note)
         })
+        var notes = await Note.find({ user: 'adm' }).lean();
         users = await User.find().lean();
     } else {
         var notesP = await Note.find({ user: req.user.id }).lean();
@@ -50,9 +52,8 @@ notesCtrl.showNotes = async (req, res) => {
         console.log(notesP2)
         notes = notesP1.concat(notesP2)
         notes = notes.concat(notesP)
-        //console.log(notes)
     }
-    res.render('notes/allNotes', { notes, users })
+    res.render('notes/allNotes', { notes, users, notesA })
 }
 
 notesCtrl.renderEditNote = async (req, res) => {

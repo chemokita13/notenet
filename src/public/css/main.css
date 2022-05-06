@@ -26,9 +26,17 @@
     margin-left: 2.5cm;
 }
 
-#btn-closeE {
-    margin-left: 1.75cm;
-}
+@media screen and (min-width: 1182px) {
+    #btn-closeE{
+        margin-left: 20%;
+    }
+ }
+
+ @media screen and (max-width: 1182px) {
+    #btn-closeE{
+        margin-left: 5%;
+    }
+ }
 
 #dropdownMenu2 {
     color: rgb(0, 0, 0);

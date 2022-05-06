@@ -1,14 +1,14 @@
 {
-  "name": "nodemongo",
+  "name": "notenet",
   "version": "1.0.0",
-  "description": "",
+  "description": "A little social net.",
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "@chemokita7 on instagram!",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

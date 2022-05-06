@@ -37,10 +37,10 @@
 </div>
 {{#if users}}
 <hr class="dropdown-divider">
-{{/if}}
-<div class="row">
+<details>
+    <summary class="btn btn-light" style="">Users</summary>
     {{#each users}}
-    <div class="coll-md-3" id="carta">
+    <div class="coll-md-3" id="carta" style="width: 50%;">
         <div class="card">
             <div class="card-body">
                 <h4 class=" d-flex justify-content-between align-items-center">
@@ -62,4 +62,30 @@
         </div>
     </div>
     {{/each}}
-</div>
+</details>
+<hr class="dropdown-divider">
+<details>
+    <summary class="btn btn-light" style="">All Notes</summary>
+    {{#each notesA}}
+    <div class="coll-md-3" id="carta">
+        <div class="card">
+            <div class="card-body">
+                {{#if username}}<a href="/users/edit/{{user}}">{{username}}</a>{{/if}}
+                <h4 class=" d-flex justify-content-between align-items-center">
+                    {{title }}
+                    <u><a href="/notes/edit/{{_id}}" class="link-light"><i class="fa fa-pencil fa-xm"
+                                id="img-pencil"></i></a></u>
+                </h4>
+                <p>{{description}}</p>
+                <form action="/notes/delete/{{_id}}?_method=DELETE" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger btn-block btn-sm">
+                        delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</details>
+{{/if}}
