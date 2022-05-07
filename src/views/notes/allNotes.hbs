@@ -1,11 +1,16 @@
-<details>
-        <summary>
-            Get Anonimus Link
-        </summary>
-        <p style="border: 1px solid white; width: 50%;" id="link">&nbsp; &nbsp; <u>https://notenet.es/anonimus-msg/{{name}}</u> &nbsp; &nbsp; <button class="btn btn-info" onclick="copy()">Copy link</button></p>
-        Any person who enter in tihs link will able to put you an anonimus note.
-    </details>
-    <br>
+<div class="row">
+    <div class="coll-md-3">
+        <details>
+            <summary>
+                Get Anonimus Link
+            </summary>
+            <p style="border: 1px solid white;" id="link">&nbsp; &nbsp;
+                <u>https://notenet.es/anonimus-msg/{{name}}</u> &nbsp; &nbsp; <button class="btn btn-info"
+                    onclick="copy()">Copy link</button></p>
+            Any person who enter in tihs link will able to put you an anonimus note.
+        </details>
+    </div>
+</div>
 <div class="row">
     <!-- cart add -->
     <div class="coll-md-3" id="carta" style="height: 162.58px; padding: 0 0 162.58px;">
@@ -98,9 +103,9 @@
 </details>
 {{/if}}
 <script>
-function copy() {
-  var copyText = document.getElementById("link");
-  navigator.clipboard.writeText(copyText.innerHTML);
-  alert('Link copied to clipboard!')
-}
-</script> 
+    function copy() {
+        var copyText = document.getElementById("link");
+        navigator.clipboard.writeText(copyText.innerHTML);
+        alert('Link copied to clipboard!')
+    }
+</script>
