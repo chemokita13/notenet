@@ -1,6 +1,7 @@
 const notesCtrl = {};
 const Note = require('../models/note')
 const User = require('../models/user')
+
 notesCtrl.addNote = (req, res) => {
     res.render('notes/newNote')
 }
@@ -53,7 +54,9 @@ notesCtrl.showNotes = async (req, res) => {
         notes = notesP1.concat(notesP2)
         notes = notes.concat(notesP)
     }
-    res.render('notes/allNotes', { notes, users, notesA })
+    const user = await User.findById(req.user.id)
+    const name = user.name
+    res.render('notes/allNotes', { notes, users, notesA, name })
 }
 
 notesCtrl.renderEditNote = async (req, res) => {
@@ -106,7 +109,23 @@ notesCtrl.deleteNote = async (req, res) => {
         req.flash('added_msg', 'Note deleted successfully')
         res.redirect('/notes')
     }
+}
 
+notesCtrl.renderAnonMsg = async (req, res) =>{
+    let user = req.params.user
+    res.render('notes/anonMsg', {user} )
+}
+
+notesCtrl.putAnonMsg =async (req, res)=>{
+    const {title, description} = req.body
+    const newNote = new Note({ title, description })
+    const user = await User.findOne({name: req.params.user})
+    newNote.dest = user.name
+    newNote.editable = true
+    newNote.anon = '(Anonimus)'
+    newNote.save()
+    req.flash('added_msg', 'Note sent succesfully!')
+    res.redirect('/')
 }
 
 module.exports = notesCtrl;

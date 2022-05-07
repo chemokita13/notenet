@@ -6,9 +6,10 @@ const noteEsquema = new Schema({
     },
     description: {type: String,
                   required: true},
-    user: {type: String, required: true},
+    user: {type: String, required: true, default: 'Anon'},
     editable: {type: Boolean, required: true},
-    dest: {type: String, required: false}
+    dest: {type: String, required: false},
+    anon: {type: String, required: false}
     },
     { timestamps : true
 })
