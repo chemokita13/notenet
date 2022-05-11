@@ -6,6 +6,9 @@ const method = require('method-override')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
+const {Router} = require('express');
+const { redirect } = require('express/lib/response');
+const router = Router();
 //inits
 const app = express();
 require('./config/passport')
@@ -48,7 +51,15 @@ app.use(require('./routes/support.routes'));
 app.use(require('./routes/notes.routes'));
 app.use(require('./routes/users.routes'));
 
+//app.use(router.get(/^(.*)$/, (req,res)=>{res.redirect('/')}))
+
 // static files
 app.use(express.static(path.join(__dirname, 'public')))
+
+// not found error
+app.use((req,res)=>{
+    req.flash('errorrd_msg', "This route does not exists.")
+    res.redirect('/')
+})
 
 module.exports = app

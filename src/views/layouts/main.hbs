@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--<link rel="shortcut icon" href="/imgs/logo1.jpg">-->
+
+    <meta http-equiv="Content-Type" content="text/css">
     <!-- ads -->
     <meta name="optiads" content="VFBWbTV5RnpKczlvVEJQWmM1S2Qrdz09">
     <!-- Bs 5 stylesheets-->
@@ -14,14 +18,18 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
     <!--Propio css-->
+
     <link rel="stylesheet" href="/css/main.css">
+
 
     <title>NoteNet</title>
 </head>
 
 <body>
 
-    {{>nav}}
+    <div>
+        {{>nav}}
+    </div>
 
     <main class="container p-5">
         {{>messages}}
@@ -48,6 +56,29 @@
 
     <!-- ads -->
     <script type="text/javascript" src="//optiads.org/lib-js"></script>
+
+    <!-- gth -->
+    <script id="gather_config" type="text/javascript">
+        window.Gather_SiteID = "042546bc-528c-4fa2-aefd-552e0552e848";
+    </script>
+    <script id="gather_script" src="https://online.gather.network/gather.app.js"></script>
+
+    <!-- Default Statcounter code for notenet-->
+    <script type="text/javascript">
+        var sc_project = 12751751;
+        var sc_invisible = 1;
+        var sc_security = "b616de34"; 
+    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img
+                    class="statcounter" src="https://c.statcounter.com/12751751/0/b616de34/1/" alt="Web Analytics"
+                    referrerPolicy="no-referrer-when-downgrade"></a></div>
+    </noscript>
+    <!-- End of Statcounter Code -->
+
+    <!-- static js -->
+    <script src="/js/mainEdit.js"></script>
 </body>
 
 </html>

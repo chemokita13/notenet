@@ -2,6 +2,16 @@
     margin-left: 1cm;
 }
 
+#log{
+    color: black;
+}
+
+.btn:hover.logger{
+    color: black;
+    background-color: white;
+    border: 0.5px solid gray ;
+}
+
 #img-pencil {
     margin-left: 0.5cm;
     margin-bottom: 0.5cm;
