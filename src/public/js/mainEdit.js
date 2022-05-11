@@ -2,15 +2,6 @@ console.log('Static javascript working')
 
 btnCp = document.getElementById('copier')
 
-function sendForm (txt, ctx){
-  form = document.getElementById('formctx')
-  contet = document.getElementById('cont')
-  text = document.getElementById('text')
-  content.value = 'hola'
-  form.submit()
-  alert(13)
-}
-
 function copy() {
   var link = document.getElementById("link");
   var copyText = link.innerHTML
@@ -24,5 +15,4 @@ function copy() {
 }
 
 btnCp.addEventListener('click', copy)
-alert('s')
-sendForm('','')
+

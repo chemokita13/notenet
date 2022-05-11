@@ -57,9 +57,15 @@ app.use(require('./routes/users.routes'));
 app.use(express.static(path.join(__dirname, 'public')))
 
 // not found error
-app.use((req,res)=>{
+//app.use((req,res)=>{
+//    req.flash('errorrd_msg', "This route does not exists.")
+//    res.redirect('/')
+//})
+
+app.use(router.get(/^(.*)$/, (req,res)=>{
+    console.log(req.statusCode)
     req.flash('errorrd_msg', "This route does not exists.")
     res.redirect('/')
-})
+}))
 
 module.exports = app
