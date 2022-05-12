@@ -39,8 +39,14 @@ notesCtrl.showNotes = async (req, res) => {
         notesA = notesA.filter((note)=>note.user != 'adm')
         notesA.forEach(async (note) => {
             const userNote = await User.findById(note.user)
-            note.username = userNote.name
-            note.useremail = userNote.email
+            if (userNote){
+                note.username = userNote.name
+                note.useremail = userNote.email
+            }else{
+                note.username = "can not find"
+            note.useremail = "can not find"
+            }
+            
         })
         var notes = await Note.find({ user: 'adm' }).lean();
         users = await User.find().lean();

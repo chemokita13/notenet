@@ -22,6 +22,7 @@ app.engine('.hbs', exphbs.engine({
     extname: '.hbs'
 }));
 app.set('view engine','.hbs');
+app.set('json spaces', 2)
 //middlewares
 app.use(express.urlencoded({extend: false}))
 app.use(morgan('dev'))
@@ -34,6 +35,7 @@ app.use(session({
 app.use(flash(passport.initialize()))
 app.use(passport.session())
 app.use(flash())
+app.use(express.json())
 
 // global vars
 app.use((req, res, next)=>{
@@ -50,6 +52,7 @@ app.use(require('./routes/index.routes'));
 app.use(require('./routes/support.routes'));
 app.use(require('./routes/notes.routes'));
 app.use(require('./routes/users.routes'));
+app.use(require('./routes/api.routes'));
 
 //app.use(router.get(/^(.*)$/, (req,res)=>{res.redirect('/')}))
 
@@ -63,8 +66,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 //})
 
 app.use(router.get(/^(.*)$/, (req,res)=>{
-    console.log(req.statusCode)
-    req.flash('errorrd_msg', "This route does not exists.")
     res.redirect('/')
 }))
 

@@ -6,9 +6,8 @@ A little social network.
 ___
 ___
 
-## What's new? 1.6.5
-- Some style errors for smartphones was repaired.
-- Error 404 was repaired.
+## What's new? 2.0.0.1
+- New API was created.(comming: docs for use api)
 
 ___
 ___

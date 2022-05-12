@@ -32,7 +32,7 @@
             <div class="card-body">
                 {{#if username}}<a href="/users/edit/{{user}}">{{username}}</a>{{/if}}
                 <h4 class=" d-flex justify-content-between align-items-center">
-                    {{title}}, {{anon}}
+                    {{title}} {{#if anon}}, {{anon}} {{/if}}
                     <u><a href="/notes/edit/{{_id}}" class="link-light"><i class="fa fa-pencil fa-xm"
                                 id="img-pencil"></i></a></u>
                 </h4>
