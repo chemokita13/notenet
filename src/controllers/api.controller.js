@@ -82,13 +82,21 @@ apiCtrl.EditNote = async (req, res) => {
         if (note.id) {
             const noteToEdit = await Note.findById(note.id)
             if (!noteToEdit) { info[1].status = ["Something went wrong"] } else {
-                if (noteToEdit.editable == false) { info[1].status = ["Note not editable"] }
-                else {
+                if(info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad"){
                     if (note.title) { noteToEdit.title = title }
                     if (note.description) { noteToEdit.description = description }
                     if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
                     noteToEdit.save()
                     info[1].status = ["note succesflly edited", noteToEdit]
+                }else{
+                    if (noteToEdit.editable == false) { info[1].status = ["Note not editable"] }
+                    else {
+                        if (note.title) { noteToEdit.title = title }
+                        if (note.description) { noteToEdit.description = description }
+                        if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
+                        noteToEdit.save()
+                        info[1].status = ["note succesflly edited", noteToEdit]
+                    }
                 }
             }
         }
@@ -106,10 +114,15 @@ apiCtrl.DeleteNote = async (req, res) => {
             noteDel = await Note.findById(note.id)
             if (!noteDel) {info[1].status = ["noteid not valid"]}
             else{
-                if (noteDel.editable == false){ info[1].status = ["Note not editable"]}
-                else {
+                if(info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad"){
                     await Note.findByIdAndDelete(note.id)
                     info[1].status = ["Note deleted succesfully", noteDel]
+                }else{
+                    if (noteDel.editable == false){ info[1].status = ["Note not editable"]}
+                    else {
+                        await Note.findByIdAndDelete(note.id)
+                        info[1].status = ["Note deleted succesfully", noteDel]
+                    }
                 }
             }
         } else{
