@@ -17,11 +17,13 @@ async function login(userLog) {
             const user = await User.findOne({ name: name })
             if (!user) {
                 match = false
+                errorCode= '001'
                 error = "User or email not found"
             } else {
                 userid = user.id
                 match = await user.matchPassword(password, user.password)
                 if (!match) {
+                    errorCode = '002'
                     error = "Paswords do not match"
                 }
             }
@@ -29,16 +31,17 @@ async function login(userLog) {
             userid = user.id
             match = await user.matchPassword(password, user.password)
             if (!match) {
+                errorCode = '002'
                 error = "Paswords do not match"
             }
         }
         if (error) {
-            newtemplate = { "login": match, "error": error }
+            newtemplate = { "login": match, "error": [errorCode, error]}
         } else {
             newtemplate = { "login": match }
         }
     } else {
-        newtemplate = { "login": false, "error": "Name or Password are null." }
+        newtemplate = { "login": false, "error": ['000', "Name or Password are null."] }
     }
     const returner = [userid, newtemplate]
     return returner
