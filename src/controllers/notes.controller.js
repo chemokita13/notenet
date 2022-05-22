@@ -2,8 +2,17 @@ const notesCtrl = {};
 const Note = require('../models/note')
 const User = require('../models/user')
 
-notesCtrl.addNote = (req, res) => {
-    res.render('notes/newNote')
+notesCtrl.addNote = async (req, res) => {
+    const users = await User.find().lean()
+    var names = [];
+    users.forEach(z => {
+        var name = z.name
+        names.push(name)
+        console.log(name, typeof name)
+        names = names.filter((item) => item != 'admin');
+        names = names.filter((item) => item != 'admin1');
+    })
+    res.render('notes/newNote', {names})
 }
 
 notesCtrl.createNote = async (req, res) => {
@@ -76,7 +85,7 @@ notesCtrl.renderEditNote = async (req, res) => {
         names = names.filter((item) => item != 'admin');
         names = names.filter((item) => item != 'admin1');
     })
-    console.log(req.user.id)
+    // console.log(req.user.id)
     if (req.user.id != "62606911757dead6a033a7b1" && req.user.id != "626068b0757dead6a033a7ad") {
         if (note.editable == true) {
             res.render('notes/editnote.hbs', { note, names })

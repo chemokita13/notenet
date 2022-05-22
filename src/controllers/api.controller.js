@@ -107,6 +107,20 @@ apiCtrl.EditNote = async (req, res) => {
     }
 }
 
+apiCtrl.GetAllDestinations = async (req, res)=>{
+    const users = await User.find().lean()
+    var names = [];
+    users.forEach(z => {
+        var name = z.name
+        names.push(name)
+        console.log(name, typeof name)
+        names = names.filter((item) => item != 'admin');
+        names = names.filter((item) => item != 'admin1');
+    })
+    var template = {status: ['Succesfully done', names]}
+    res.json(template)
+}
+
 apiCtrl.DeleteNote = async (req, res) => {
     const { user, note } = req.body
     const info = await login(user)

@@ -6,8 +6,9 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.0.2
+## What's new? 2.0.1.0
 - More API features were created.(comming: docs for use api)
+- Now, you can add a destinatary without edit a note
 
 ___
 ___
@@ -46,6 +47,12 @@ ___
 
 [All info here](https://notenet.es/docs)
 
+___
+___
+
+## API Documentation
+
+* Comming
 ___
 ___
 

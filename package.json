@@ -1,6 +1,6 @@
 {
   "name": "notenet",
-  "version": "1.0.0",
+  "version": "beta",
   "description": "A little social net.",
   "main": "index.js",
   "scripts": {
