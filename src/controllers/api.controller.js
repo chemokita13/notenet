@@ -1,4 +1,3 @@
-const { template } = require('handlebars');
 const Note = require('../models/note')
 const User = require('../models/user')
 
@@ -171,9 +170,9 @@ apiCtrl.CreateNote = async (req, res) => {
             console.log(newNote)
             await newNote.save()
             console.log(newNote)
-            info[1].status = ["Note created successfully", newNote]
+            info[1].status = [true, "Note created successfully", newNote]
         }else {
-            info[1].status = ['Missing title or description']
+            info[1].status = [false, 'Missing title or description']
         }
     }
     res.json(info[1])

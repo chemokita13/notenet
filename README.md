@@ -6,9 +6,9 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.1.0
+## What's new? 2.0.1.1
 - More API features were created.(comming: docs for use api)
-- Now, you can add a destinatary without edit a note
+
 
 ___
 ___
@@ -53,6 +53,7 @@ ___
 ## API Documentation
 
 * Comming
+
 ___
 ___
 
