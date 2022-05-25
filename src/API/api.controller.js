@@ -3,9 +3,9 @@ const User = require('../models/user')
 
 const apiCtrl = {}
 
-async function login(userLog) {
+async function login(userLog) { //* returns false if user not found and true + userid if login is correct
     var userid
-    if (userLog){
+    if (userLog) {
         var name = userLog.name
         var password = userLog.password
     }
@@ -16,7 +16,7 @@ async function login(userLog) {
             const user = await User.findOne({ name: name })
             if (!user) {
                 match = false
-                errorCode= '001'
+                errorCode = '001'
                 error = "User or email not found"
             } else {
                 userid = user.id
@@ -35,7 +35,7 @@ async function login(userLog) {
             }
         }
         if (error) {
-            newtemplate = { "login": match, "error": [errorCode, error]}
+            newtemplate = { "login": match, "error": [errorCode, error] }
         } else {
             newtemplate = { "login": match }
         }
@@ -46,18 +46,34 @@ async function login(userLog) {
     return returner
 }
 
-apiCtrl.api = (req, res) => {
+apiCtrl.api = (req, res) => { //* API status
     console.log(req.body)
-    res.json({ 'staus': 'working (BETA)' })
+    res.json({ 'staus': 'working (alpha)' })
 }
 
-apiCtrl.Log = async (req, res) => {
+apiCtrl.GetAllDestinations = async (req, res) => { //* Returns an array of all users except admin accounts
+    const users = await User.find().lean()
+    var names = [];
+    users.forEach(z => {
+        var name = z.name
+        names.push(name)
+        console.log(name, typeof name)
+        names = names.filter((item) => item != 'admin');
+        names = names.filter((item) => item != 'admin1');
+    })
+    var template = { status: ['Succesfully done', names] }
+    res.json(template)
+}
+
+//* Users controllers
+apiCtrl.Log = async (req, res) => { // returns true or false in function of the login
     const { user } = req.body
     const info = await login(user)
     res.json(info[1])
 }
 
-apiCtrl.Notes = async (req, res) => {
+//* Notes controller
+apiCtrl.Notes = async (req, res) => { //* returns all notes of the user
     const { user } = req.body
     const info = await login(user)
     if (!info[1].login) {
@@ -75,8 +91,8 @@ apiCtrl.Notes = async (req, res) => {
     }
 }
 
-apiCtrl.EditNote = async (req, res) => {
-    const { user, note} = req.body
+apiCtrl.EditNote = async (req, res) => { //* return the note edited
+    const { user, note } = req.body
     const info = await login(user)
     if (!info[1].login) {
         res.json(info[1])
@@ -84,13 +100,13 @@ apiCtrl.EditNote = async (req, res) => {
         if (note.id) {
             const noteToEdit = await Note.findById(note.id)
             if (!noteToEdit) { info[1].status = ["Something went wrong"] } else {
-                if(info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad"){
+                if (info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad") {
                     if (note.title) { noteToEdit.title = title }
                     if (note.description) { noteToEdit.description = description }
                     if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
                     noteToEdit.save()
                     info[1].status = ["note succesflly edited", noteToEdit]
-                }else{
+                } else {
                     if (noteToEdit.editable == false) { info[1].status = ["Note not editable"] }
                     else {
                         if (note.title) { noteToEdit.title = title }
@@ -106,72 +122,80 @@ apiCtrl.EditNote = async (req, res) => {
     }
 }
 
-apiCtrl.GetAllDestinations = async (req, res)=>{
-    const users = await User.find().lean()
-    var names = [];
-    users.forEach(z => {
-        var name = z.name
-        names.push(name)
-        console.log(name, typeof name)
-        names = names.filter((item) => item != 'admin');
-        names = names.filter((item) => item != 'admin1');
-    })
-    var template = {status: ['Succesfully done', names]}
-    res.json(template)
-}
-
-apiCtrl.DeleteNote = async (req, res) => {
+apiCtrl.DeleteNote = async (req, res) => { //* returns the note deleted
     const { user, note } = req.body
     const info = await login(user)
-    if (!info[1].login){
+    if (!info[1].login) {
         res.json(info[1])
-    }else{
-        if(note.id){
+    } else {
+        if (note.id) {
             noteDel = await Note.findById(note.id)
-            if (!noteDel) {info[1].status = ["noteid not valid"]}
-            else{
-                if(info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad"){
+            if (!noteDel) { info[1].status = ["noteid not valid"] }
+            else {
+                if (info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad") {
                     await Note.findByIdAndDelete(note.id)
                     info[1].status = ["Note deleted succesfully", noteDel]
-                }else{
-                    if (noteDel.editable == false){ info[1].status = ["Note not editable"]}
+                } else {
+                    if (noteDel.editable == false) { info[1].status = ["Note not editable"] }
                     else {
                         await Note.findByIdAndDelete(note.id)
                         info[1].status = ["Note deleted succesfully", noteDel]
                     }
                 }
             }
-        } else{
+        } else {
             info[1].status = ["missing note.id"]
         }
         res.json(info[1])
     }
 }
 
-apiCtrl.CreateNote = async (req, res) => {
-    const {user, note} = req.body
+apiCtrl.CreateNote = async (req, res) => { //* creates a note
+    const { user, note } = req.body
     const info = await login(user)
-    if (!info[1].login){
+    if (!info[1].login) {
         res.json(info[1])
-    }else{
+    } else {
         title = note.title
         description = note.description
-        dest = note.dest
-        if (note.title && note.description){ 
+        dest = note.destinatary
+        if (note.title && note.description) {
             const newNote = new Note({ title, description })
-            if(info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad"){
-                newNote.user = 'adm'
-                newNote.editable = false
-            }else{
+            if (info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad") {
+
+                if (title == '//private') {
+                    newNote.user = 'adminP';
+                    newNote.editable = true;
+                } else {
+                    newNote.user = 'adm',
+                    newNote.editable = false
+                }
+
+            } else {
+
                 newNote.user = info[0]
                 newNote.editable = true
+
             }
-            if (dest) { newNote.dest = dest}
-            console.log(newNote)
-            await newNote.save()
-            console.log(newNote)
-            info[1].status = [true, "Note created successfully", newNote]
-        }else {
+            if (dest) {
+                const posibleUserDestination = await User.find({ name: dest })
+                if (posibleUserDestination) {
+                    newNote.dest = dest
+                    await newNote.save()
+                    //console.log(newNote)
+                    info[1].status = [true, "Note created successfully", newNote]
+                } else {
+                    info[1].status = [false, "Incorrect destination", "c00"]
+                }
+
+            } else {
+                await newNote.save()
+                //console.log(newNote)
+                info[1].status = [true, "Note created successfully", newNote]
+            }
+            //console.log(newNote)
+
+        } else {
             info[1].status = [false, 'Missing title or description']
         }
     }

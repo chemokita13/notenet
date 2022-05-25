@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const { api, Log, Notes, EditNote, DeleteNote, CreateNote, GetAllDestinations } = require('../controllers/api.controller')
+const { api, Log, Notes, EditNote, DeleteNote, CreateNote, GetAllDestinations } = require('./api.controller')
 
 router.get('/api', api)
 

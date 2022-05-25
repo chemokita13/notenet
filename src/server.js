@@ -9,10 +9,12 @@ const passport = require('passport')
 const {Router} = require('express');
 const { redirect } = require('express/lib/response');
 const router = Router();
-//inits
+
+//* inits
 const app = express();
 require('./config/passport')
-// sets
+
+//* sets
 app.set('port', process.env.PORT || 5000)
 app.set('views', path.join(__dirname, 'views'))
 app.engine('.hbs', exphbs.engine({
@@ -23,7 +25,8 @@ app.engine('.hbs', exphbs.engine({
 }));
 app.set('view engine','.hbs');
 app.set('json spaces', 2)
-//middlewares
+
+//* middlewares
 app.use(express.urlencoded({extend: false}))
 app.use(morgan('dev'))
 app.use(method('_method'))
@@ -37,7 +40,7 @@ app.use(passport.session())
 app.use(flash())
 app.use(express.json())
 
-// global vars
+//* global vars
 app.use((req, res, next)=>{
     res.locals.added_msg = req.flash('added_msg')
     res.locals.error_msg = req.flash('error_msg')
@@ -47,23 +50,15 @@ app.use((req, res, next)=>{
     next();
 })
 
-// urls
+//* urls
 app.use(require('./routes/index.routes'));
 app.use(require('./routes/support.routes'));
 app.use(require('./routes/notes.routes'));
 app.use(require('./routes/users.routes'));
-app.use(require('./routes/api.routes'));
+app.use(require('./API/api.routes'));
 
-//app.use(router.get(/^(.*)$/, (req,res)=>{res.redirect('/')}))
-
-// static files
+//* static files
 app.use(express.static(path.join(__dirname, 'public')))
-
-// not found error
-//app.use((req,res)=>{
-//    req.flash('errorrd_msg', "This route does not exists.")
-//    res.redirect('/')
-//})
 
 app.use(router.get(/^(.*)$/, (req,res)=>{
     res.redirect('/')
