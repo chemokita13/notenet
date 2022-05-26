@@ -99,24 +99,26 @@ apiCtrl.EditNote = async (req, res) => { //* return the note edited
     } else {
         if (note.id) {
             const noteToEdit = await Note.findById(note.id)
-            if (!noteToEdit) { info[1].status = ["Something went wrong"] } else {
+            if (!noteToEdit) { info[1].status = [false, "Something went wrong", "01e"] } else {
                 if (info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad") {
                     if (note.title) { noteToEdit.title = title }
                     if (note.description) { noteToEdit.description = description }
                     if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
                     noteToEdit.save()
-                    info[1].status = ["note succesflly edited", noteToEdit]
+                    info[1].status = [true, "note succesflly edited", noteToEdit]
                 } else {
-                    if (noteToEdit.editable == false) { info[1].status = ["Note not editable"] }
+                    if (noteToEdit.editable == false) { info[1].status = [false, "Note not editable", "02e"] }
                     else {
                         if (note.title) { noteToEdit.title = title }
                         if (note.description) { noteToEdit.description = description }
                         if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
                         noteToEdit.save()
-                        info[1].status = ["note succesflly edited", noteToEdit]
+                        info[1].status = [true, "note succesflly edited", noteToEdit]
                     }
                 }
             }
+        }else{
+            info[1].status = [false, "note id not found", "03e"]
         }
         res.json(info[1])
     }
