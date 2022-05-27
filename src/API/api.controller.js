@@ -1,5 +1,9 @@
 const Note = require('../models/note')
 const User = require('../models/user')
+const passport = require('passport')
+const { v4: uuidv4 } = require('uuid');
+const { getToken } = require('../config/jwt.config');
+const { getTemplateConfirm, sendEmailConfirm } = require('../config/mail.config');
 
 const apiCtrl = {}
 
@@ -65,10 +69,124 @@ apiCtrl.GetAllDestinations = async (req, res) => { //* Returns an array of all u
 }
 
 //* Users controllers
+
 apiCtrl.Log = async (req, res) => { // returns true or false in function of the login
     const { user } = req.body
     const info = await login(user)
     res.json(info[1])
+}
+
+// create user
+apiCtrl.CreateUser = async (req, res) => {
+    const { user } = req.body
+    var template;
+    if (user.name && user.email && user.password) {
+        if (User.findOne({ email: user.email }) || User.findOne({ name: user.name })) {
+            // if user already exists
+            template = { "status": [false, "User already exists", "01n"] }
+        } else {
+            // if user doesn't exist
+
+            // if name is valid
+            if (user.name.length > 3 && user.name != '' && user.name != 'none' && user.name != 'administrator' && user.name != 'any' && !user.name.startsWith('admin')) {
+                // if email is valid
+                if (user.email.includes('@') && user.email.includes('.') && user.email.length > 4) {
+                    // if password is valid
+                    if (user.password.length > 5) {
+                        // if all is ok
+                        const userToCreate = new User({
+                            name: user.name,
+                            email: user.email,
+                            code: uuidv4()
+                        })
+                        // get token and email template
+                        const token = getToken({ email: user.email, code });
+                        const templateEmail = getTemplateConfirm(user.name, token);
+                        // send email
+                        await sendEmailConfirm(user.email, 'Confirm your e-mail.', templateEmail);
+                        // encrypt password
+                        userToCreate.password = await userToCreate.encryptPassword(user.password)
+                        userToCreate.status = "UNVERIFIED"
+                        // save user
+                        await userToCreate.save()
+                        // welcome message
+                        const CrtUser = await User.findOne({ email: user.email }).lean()
+                        var title = `Hello ${user.name}!`
+                        var description = 'For info, go up to: home. The cards with *Admin* title are not editables.'
+                        const newNote = await new Note({ title, description, user: CrtUser._id, editable: true })
+                        await newNote.save()
+                        // update template
+                        template = { "status": [true, "An email was sent to confirm your account"] }
+                    } else {
+                        // if password is not valid
+                        template = { "status": [false, "Password must be at least 6 characters long", "02n"] }
+                    }
+                } else {
+                    // if email is not valid
+                    template = { "status": [false, "Email is not valid", "03n"] }
+                }
+            } else {
+                // if name is not valid
+                template = { "status": [false, "Name is not valid", "04n"] }
+            }
+
+        }
+    } else {
+        // if name or email or password are null
+        template = { "status": [false, "Name, email or password are null", "05n"] }
+    }
+    // return json template
+    res.json(template)
+}
+// change password
+apiCtrl.Changes = async (req, res) => {
+    const { user, newUser } = req.body
+    var template;
+    // confirm that user is correct
+    const info = await login(user)
+    if (!info[1].login) {
+        // if user is not correct
+        res.json(info[1])
+    } else {
+        // if user is correct
+        const userToChange = await User.findById(info[0])
+        // if want to change password
+        if (newUser.password) {
+            // if password is valid
+            if (newUser.password.length > 5) {
+                userToChange.password = await userToChange.encryptPassword(userToChange.password)
+                // get template
+                template = { "statusPassword": [true, "Password changed"] }
+            } else {
+                // if password is not valid
+                template = { "statusPassword": [false, "Password must be at least 6 characters long", "01c"] }
+            }
+        }
+        // if want to change email
+        if (newUser.email) {
+            // if email is valid
+            if (newUser.email.includes('@') && newUser.email.includes('.') && newUser.email.length > 4) {
+                userToChange.email = newUser.email
+                // get code 
+                const code = uuidv4()
+                // get token and email template
+                const token = getToken({ email: newUser.email, code });
+                const templateEmail = getTemplateConfirm(userToChange.name, token);
+                // send email
+                await sendEmailConfirm(newUser.email, 'Confirm your e-mail.', templateEmail);
+                // get template
+                template = { "statusEmail": [true, "An email was sent to confirm your account"] }
+            } else {
+                // if email is not valid
+                template = { "statusEmail": [false, "Email is not valid", "02c"] }
+            }
+        }
+        // save user
+        await userToChange.save()
+        // return json template
+        res.json(template)
+    }
+
 }
 
 //* Notes controller
@@ -116,7 +234,7 @@ apiCtrl.EditNote = async (req, res) => { //* return the note edited
                     }
                 }
             }
-        }else{
+        } else {
             info[1].status = [false, "note id not found", "03e"]
         }
         res.json(info[1])
@@ -169,7 +287,7 @@ apiCtrl.CreateNote = async (req, res) => { //* creates a note
                     newNote.editable = true;
                 } else {
                     newNote.user = 'adm',
-                    newNote.editable = false
+                        newNote.editable = false
                 }
 
             } else {

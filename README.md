@@ -6,7 +6,7 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.1.4
+## What's new? 2.0.1.5
 - More API features were created.(comming: docs for use api)
 
 
@@ -20,7 +20,7 @@ After your friend and you have an account:
 -Create a note  
 -Click to the pencil of your note and go to 'Destinatary'
     and write your friend's name. 
-    Later, click on 'save' button. 
+    Later, click on 'save' button.  
     A new note will appear on your friend's account.
 
 ___
