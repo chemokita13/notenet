@@ -41,7 +41,11 @@ async function login(userLog) { //* returns false if user not found and true + u
         if (error) {
             newtemplate = { "login": match, "error": [errorCode, error] }
         } else {
-            newtemplate = { "login": match }
+            if (user.status == "UNVERIFIED") {
+                newtemplate = { "login": false, "error": ["100", "Please confirm your email"] }
+            } else {
+                newtemplate = { "login": match }
+            }
         }
     } else {
         newtemplate = { "login": false, "error": ['000', "Name or Password are null."] }
@@ -81,8 +85,11 @@ apiCtrl.CreateUser = async (req, res) => {
     const { user } = req.body
     var template;
     if (user.name && user.email && user.password) {
-        if (User.findOne({ email: user.email }) || User.findOne({ name: user.name })) {
+        const matchUser = await User.findOne({ name: user.name })
+        const matchEmail = await User.findOne({ email: user.email })
+        if (matchUser || matchEmail) {
             // if user already exists
+            console.log(matchUser, matchEmail)
             template = { "status": [false, "User already exists", "01n"] }
         } else {
             // if user doesn't exist
@@ -100,7 +107,7 @@ apiCtrl.CreateUser = async (req, res) => {
                             code: uuidv4()
                         })
                         // get token and email template
-                        const token = getToken({ email: user.email, code });
+                        const token = getToken({ email: user.email, code: userToCreate.code });
                         const templateEmail = getTemplateConfirm(user.name, token);
                         // send email
                         await sendEmailConfirm(user.email, 'Confirm your e-mail.', templateEmail);
@@ -164,29 +171,35 @@ apiCtrl.Changes = async (req, res) => {
         }
         // if want to change email
         if (newUser.email) {
-            // if email is valid
-            if (newUser.email.includes('@') && newUser.email.includes('.') && newUser.email.length > 4) {
-                userToChange.email = newUser.email
-                // get code 
-                const code = uuidv4()
-                // get token and email template
-                const token = getToken({ email: newUser.email, code });
-                const templateEmail = getTemplateConfirm(userToChange.name, token);
-                // send email
-                await sendEmailConfirm(newUser.email, 'Confirm your e-mail.', templateEmail);
-                // get template
-                template = { "statusEmail": [true, "An email was sent to confirm your account"] }
+            // if email is in use
+            const matchEmail = await User.findOne({ email: newUser.email })
+            if (matchEmail) {
+                // if email is already used
+                template = { "statusEmail": [false, "Email already used", "02c"] }
             } else {
-                // if email is not valid
-                template = { "statusEmail": [false, "Email is not valid", "02c"] }
+                // if email is valid
+                if (newUser.email.includes('@') && newUser.email.includes('.') && newUser.email.length > 4) {
+                    userToChange.email = newUser.email
+                    // get code 
+                    const code = uuidv4()
+                    // get token and email template
+                    const token = getToken({ email: newUser.email, code });
+                    const templateEmail = getTemplateConfirm(userToChange.name, token);
+                    // send email
+                    await sendEmailConfirm(newUser.email, 'Confirm your e-mail.', templateEmail);
+                    // get template
+                    template = { "statusEmail": [true, "An email was sent to confirm your account"] }
+                } else {
+                    // if email is not valid
+                    template = { "statusEmail": [false, "Email is not valid", "02c"] }
+                }
             }
+            // save user
+            await userToChange.save()
+            // return json template
+            res.json(template)
         }
-        // save user
-        await userToChange.save()
-        // return json template
-        res.json(template)
     }
-
 }
 
 //* Notes controller
