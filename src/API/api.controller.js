@@ -57,7 +57,6 @@ apiCtrl.GetAllDestinations = async (req, res) => { //* Returns an array of all u
     users.forEach(z => {
         var name = z.name
         names.push(name)
-        console.log(name, typeof name)
         names = names.filter((item) => item != 'admin');
         names = names.filter((item) => item != 'admin1');
     })
@@ -101,17 +100,17 @@ apiCtrl.EditNote = async (req, res) => { //* return the note edited
             const noteToEdit = await Note.findById(note.id)
             if (!noteToEdit) { info[1].status = [false, "Something went wrong", "01e"] } else {
                 if (info[0] == "62606911757dead6a033a7b1" || info[0] == "626068b0757dead6a033a7ad") {
-                    if (note.title) { noteToEdit.title = title }
-                    if (note.description) { noteToEdit.description = description }
-                    if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
+                    if (note.title) { noteToEdit.title = note.title }
+                    if (note.description) { noteToEdit.description = note.description }
+                    if (note.destinatary && note.destinatary != 'adm') { noteToEdit.dest = note.destinatary }
                     noteToEdit.save()
                     info[1].status = [true, "note succesflly edited", noteToEdit]
                 } else {
                     if (noteToEdit.editable == false) { info[1].status = [false, "Note not editable", "02e"] }
                     else {
-                        if (note.title) { noteToEdit.title = title }
-                        if (note.description) { noteToEdit.description = description }
-                        if (note.dest && note.dest != 'adm') { noteToEdit.dest = dest }
+                        if (note.title) { noteToEdit.title = note.title }
+                        if (note.description) { noteToEdit.description = note.description }
+                        if (note.destinatary && note.destinatary != 'adm') { noteToEdit.dest = note.destinatary }
                         noteToEdit.save()
                         info[1].status = [true, "note succesflly edited", noteToEdit]
                     }
@@ -180,7 +179,7 @@ apiCtrl.CreateNote = async (req, res) => { //* creates a note
 
             }
             if (dest) {
-                const posibleUserDestination = await User.find({ name: dest })
+                const posibleUserDestination = await User.findOne({ name: dest })
                 if (posibleUserDestination) {
                     newNote.dest = dest
                     await newNote.save()
