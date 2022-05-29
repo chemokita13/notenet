@@ -41,6 +41,7 @@ async function login(userLog) { //* returns false if user not found and true + u
         if (error) {
             newtemplate = { "login": match, "error": [errorCode, error] }
         } else {
+            const user = await User.findById(userid)
             if (user.status == "UNVERIFIED") {
                 newtemplate = { "login": false, "error": ["100", "Please confirm your email"] }
             } else {
@@ -89,8 +90,12 @@ apiCtrl.CreateUser = async (req, res) => {
         const matchEmail = await User.findOne({ email: user.email })
         if (matchUser || matchEmail) {
             // if user already exists
-            console.log(matchUser, matchEmail)
-            template = { "status": [false, "User already exists", "01n"] }
+            if (matchUser) {
+                template = { status: [false, "Name already exists", "01n"] }
+            }
+            if (matchEmail) {
+                template = { "status": [false, "Email already exists", "01n"] }
+            }
         } else {
             // if user doesn't exist
 
@@ -148,7 +153,7 @@ apiCtrl.CreateUser = async (req, res) => {
 // change password
 apiCtrl.Changes = async (req, res) => {
     const { user, newUser } = req.body
-    var template;
+    var template = {}
     // confirm that user is correct
     const info = await login(user)
     if (!info[1].login) {
@@ -161,12 +166,12 @@ apiCtrl.Changes = async (req, res) => {
         if (newUser.password) {
             // if password is valid
             if (newUser.password.length > 5) {
-                userToChange.password = await userToChange.encryptPassword(userToChange.password)
+                userToChange.password = await userToChange.encryptPassword(newUser.password)
                 // get template
-                template = { "statusPassword": [true, "Password changed"] }
+                template.statusPassword = [true, "Password changed"]
             } else {
                 // if password is not valid
-                template = { "statusPassword": [false, "Password must be at least 6 characters long", "01c"] }
+                template.statusPassword = [false, "Password must be at least 6 characters long", "01c"]
             }
         }
         // if want to change email
@@ -175,7 +180,7 @@ apiCtrl.Changes = async (req, res) => {
             const matchEmail = await User.findOne({ email: newUser.email })
             if (matchEmail) {
                 // if email is already used
-                template = { "statusEmail": [false, "Email already used", "02c"] }
+                template.statusEmail = [false, "Email already used", "02c"]
             } else {
                 // if email is valid
                 if (newUser.email.includes('@') && newUser.email.includes('.') && newUser.email.length > 4) {
@@ -188,18 +193,19 @@ apiCtrl.Changes = async (req, res) => {
                     // send email
                     await sendEmailConfirm(newUser.email, 'Confirm your e-mail.', templateEmail);
                     // get template
-                    template = { "statusEmail": [true, "An email was sent to confirm your account"] }
+                    template.statusEmail = [true, "An email was sent to confirm your account"]
                 } else {
                     // if email is not valid
-                    template = { "statusEmail": [false, "Email is not valid", "02c"] }
+                    template.statusEmail = [false, "Email is not valid", "02c"]
                 }
             }
-            // save user
-            await userToChange.save()
-            // return json template
-            res.json(template)
         }
+        // save user
+        await userToChange.save()
+        // return json template
+        res.json(template)
     }
+
 }
 
 //* Notes controller
