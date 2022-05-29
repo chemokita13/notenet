@@ -56,8 +56,8 @@ async function login(userLog) { //* returns false if user not found and true + u
 }
 
 apiCtrl.api = (req, res) => { //* API status
-    console.log(req.body)
-    res.json({ 'staus': 'working (alpha)' })
+    const jsonAPI = require('../public/API/API.json')
+    res.json(jsonAPI)
 }
 
 apiCtrl.GetAllDestinations = async (req, res) => { //* Returns an array of all users except admin accounts
@@ -192,6 +192,8 @@ apiCtrl.Changes = async (req, res) => {
                     const templateEmail = getTemplateConfirm(userToChange.name, token);
                     // send email
                     await sendEmailConfirm(newUser.email, 'Confirm your e-mail.', templateEmail);
+                    // mark user as UNVERIFIED
+                    userToChange.status = "UNVERIFIED"
                     // get template
                     template.statusEmail = [true, "An email was sent to confirm your account"]
                 } else {
@@ -202,6 +204,10 @@ apiCtrl.Changes = async (req, res) => {
         }
         // save user
         await userToChange.save()
+        // if not template
+        if (!template) {
+            template = { "error": "No changes" }
+        }
         // return json template
         res.json(template)
     }
@@ -222,7 +228,7 @@ apiCtrl.Notes = async (req, res) => { //* returns all notes of the user
         var notesP2 = await Note.find({ dest: nameUser })
         var notes = notesP1.concat(notesP2)
         notes = notes.concat(notesP)
-        info[1].status = ["Show notes succesfuly done", notes]
+        info[1].status = [true, "Show notes succesfuly done", notes]
         res.json(info[1])
     }
 }

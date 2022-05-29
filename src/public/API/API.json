@@ -1,0 +1,518 @@
+{
+    "API-Status": "working",
+    "API-Version": "1.0(alpha)",
+    "API-Description": "This is the API for the Todo App",
+    "Routes": [
+        {
+            "USER-ROUTES": [
+                {
+                    "Route": "https://notenet.es/api/logs",
+                    "Method": "POST",
+                    "Description": "This route returns true or false if the user is logged in or not",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "login": [
+                            "Type: Boolean",
+                            "Description: True if the user is logged in, false if not",
+                            "Always is sent"
+                        ],
+                        "error": [
+                            "Type: Array",
+                            "Description: The error log if the user is not logged in",
+                            "Only sent if the user is not logged in",
+                            [
+                                "Error Code",
+                                "Error Description"
+                            ]
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "password": "test"
+                            }
+                        },
+                        "Response": {
+                            "login": false,
+                            "error": [
+                                [
+                                    "002",
+                                    "Paswords do not match"
+                                ]
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Route": "https://notenet.es/api/users/create",
+                    "Method": "POST",
+                    "Description": "This route creates a new user",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name of the user, it can not be taken for other person"
+                            ],
+                            "email": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The e-mail of the user, it can not be taken for other person"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user, it have to be at least 6 characters long"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "status": [
+                            "Type: Array",
+                            "Description: True if the user was created, false if not",
+                            "Always is sent",
+                            [
+                                "Status Boolean",
+                                "Status Description",
+                                "(only when Status is false), Error code"
+                            ]
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "email": "test@gmail.com",
+                                "password": "MyPasswordIsGood"
+                            }
+                        },
+                        "Response": {
+                            "status": [
+                                true,
+                                "An email was sent to confirm your account"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Route": "https://notenet.es/api/users/changes",
+                    "Method": "POST",
+                    "Description": "This route changes the user's password or user's email",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user, (USER ORIGINAL PASSWORD)"
+                            ]
+                        },
+                        "newUser": {
+                            "email": [
+                                "Type: String",
+                                "Required: false (if not sent, the email will not be changed)",
+                                "Description: The new e-mail of the user, it can not be taken for other person"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: false (if not sent, the password will not be changed)",
+                                "Description: The new password of the user, it have to be at least 6 characters long"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "INFO": "includes all logs-route responses(error) if user is incorrect ",
+                        "statusEmail": [
+                            "Type: Array",
+                            "Description: True if the user's email was changed, false if not",
+                            [
+                                "Status Boolean",
+                                "Status Description",
+                                "(only when Status is false), Error code"
+                            ]
+                        ],
+                        "statusPassword": [
+                            "Type: Array",
+                            "Description: True if the user's password was changed, false if not",
+                            [
+                                "Status Boolean",
+                                "Status Description",
+                                "(only when Status is false), Error code"
+                            ]
+                        ],
+                        "error": [
+                            "Type: String",
+                            "Description: The error log if anything changed."
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "password": "MyPasswordIsGood"
+                            },
+                            "newUser": {
+                                "email": "test2@gmail.com",
+                                "password": "ILovePokemons"
+                            }
+                        },
+                        "Response": {
+                            "statusEmail": [
+                                false,
+                                "Email is not valid",
+                                "02c"
+                            ],
+                            "statusPassword": [
+                                true,
+                                "The user's password was changed"
+                            ],
+                            "error": "The user's password was changed"
+                        }
+                    }
+                }
+            ],
+            "NOTES-ROUTES": [
+                {
+                    "Route": "https://notenet.es/api/notes",
+                    "Method": "POST",
+                    "Description": "This route show all notes for one user",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "INFO": "includes all logs-route responses(error) if user is incorrect ",
+                        "login": [
+                            "Type: Boolean",
+                            "Description: True if the user is logged in, false if not",
+                            "Always is sent"
+                        ],
+                        "status": [
+                            "Type: Array",
+                            "Description: info of the petition",
+                            [
+                                "String, Description of the process, or Boolean fale if something went wrong",
+                                "Array, All user notes"
+                            ]
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "password": "MyPasswordIsGood"
+                            }
+                        },
+                        "Response": {
+                            "login": true,
+                            "status": [
+                                "Show notes succesfuly done",
+                                [
+                                    {
+                                        "_id": "123456789010111213141516",
+                                        "title": "**admin**",
+                                        "description": "Hi! We are looking for an official logo! For any proposes contact support@notenet.es",
+                                        "user": "adm",
+                                        "editable": false,
+                                        "createdAt": "2022-05-28T10:50:22.773Z",
+                                        "updatedAt": "2022-05-28T10:50:22.773Z",
+                                        "__v": 0
+                                    },
+                                    {
+                                        "_id": "123456789010111213141512",
+                                        "title": "Hello test!",
+                                        "description": "For info, go up to: home. The cards with *Admin* title are not editables.",
+                                        "user": "123456789010111213141519",
+                                        "editable": true,
+                                        "createdAt": "2022-05-27T20:26:56.072Z",
+                                        "updatedAt": "2022-05-27T20:26:56.072Z",
+                                        "__v": 0
+                                    },
+                                    {
+                                        "_id": "1aa456789010111213141512",
+                                        "title": "The best pokemon",
+                                        "description": "The besst pokemon is: Arceus",
+                                        "user": "1aaaa6789010111213141519",
+                                        "editable": true,
+                                        "createdAt": "2022-01-27T20:26:50.072Z",
+                                        "updatedAt": "2022-02-27T20:26:00.072Z",
+                                        "__v": 0
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Route": "https://notenet.es/api/notes/create",
+                    "Method": "POST",
+                    "Description": "This route create a new note for one user",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user"
+                            ]
+                        },
+                        "note": {
+                            "title": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The title of the note"
+                            ],
+                            "description": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The description of the note"
+                            ],
+                            "destinatary": [
+                                "Type: String",
+                                "Required: false",
+                                "Description: The name of the user that will receive the note"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "INFO": "includes all logs-route responses(error) if user is incorrect ",
+                        "login": [
+                            "Type: Boolean",
+                            "Description: True if the user is logged in, false if not",
+                            "Always is sent"
+                        ],
+                        "status": [
+                            "Type: Array",
+                            "Description: info of the petition",
+                            [
+                                "Boolean, True if the note was created, false if not",
+                                "String, Description of the process",
+                                "JSON, The note created (if status[0] is true)"
+                            ]
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "password": "MyPasswordIsGood"
+                            },
+                            "note": {
+                                "title": "I am a title",
+                                "description": "I am a description"
+                            }
+                        },
+                        "Response": {
+                            "login": true,
+                            "status": [
+                                true,
+                                "Note created successfully",
+                                {
+                                    "title": "I am a title",
+                                    "description": "I am a description",
+                                    "user": "6291340faaac7921fcede463",
+                                    "_id": "6293b1909571ce3a7aaa90e2",
+                                    "editable": true,
+                                    "createdAt": "2022-05-29T17:46:56.890Z",
+                                    "updatedAt": "2022-05-29T17:46:56.890Z",
+                                    "__v": 0
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Route": "https://notenet.es/api/notes/edit",
+                    "Method": "POST",
+                    "Description": "This route edit a note for one user",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user"
+                            ]
+                        },
+                        "note": {
+                            "id": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The id(seen as '_id') of the note"
+                            ],
+                            "title": [
+                                "Type: String",
+                                "Required: false (if not sent, the title will not be changed)",
+                                "Description: The title of the note"
+                            ],
+                            "description": [
+                                "Type: String",
+                                "Required: false (if not sent, the description will not be changed)",
+                                "Description: The description of the note"
+                            ],
+                            "destinatary": [
+                                "Type: String",
+                                "Required: false (if not sent, the destinatary will not be changed)",
+                                "Description: The name of the user that will receive the note"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "INFO": "includes all logs-route responses(error) if user is incorrect ",
+                        "login": [
+                            "Type: Boolean",
+                            "Description: True if the user is logged in, false if not",
+                            "Always is sent"
+                        ],
+                        "status": [
+                            "Type: Array",
+                            "Description: info of the petition",
+                            [
+                                "Boolean, True if the note was edited, false if not",
+                                "String, Description of the process",
+                                "JSON, The note edited (if status[0] is true)"
+                            ]
+                        ]
+                    },
+                    "Example": {
+                        "Request": {
+                            "user": {
+                                "name": "test",
+                                "password": "MyPasswordIsGood"
+                            },
+                            "note": {
+                                "id": "1aa456789010111213141512",
+                                "description": "The best pokemon is: Mewtwo"
+                            }
+                        },
+                        "Response": {
+                            "login": true,
+                            "status": [
+                                true,
+                                "note succesflly edited",
+                                {
+                                    "_id": "1aa456789010111213141512",
+                                    "title": "The best pokemon",
+                                    "description": "The besst pokemon is: Mewtwo",
+                                    "user": "6291340f50dc792gggde463",
+                                    "editable": true,
+                                    "createdAt": "2022-05-29T17:46:56.890Z",
+                                    "updatedAt": "2022-05-29T17:46:56.890Z",
+                                    "__v": 0
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "Route": "https://notenet.es/api/notes/delete",
+                    "Method": "POST",
+                    "Description": "This route delete a note for one user",
+                    "Request": {
+                        "user": {
+                            "name": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The name or e-mail of the user"
+                            ],
+                            "password": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The password of the user"
+                            ]
+                        },
+                        "note": {
+                            "id": [
+                                "Type: String",
+                                "Required: true",
+                                "Description: The id(seen as '_id') of the note"
+                            ]
+                        }
+                    },
+                    "Response": {
+                        "login": true,
+                        "status": [
+                            "Note deleted succesfully",
+                            {
+                                "_id": "62zsdggt9571ce3a742690e2",
+                                "title": "I am a title",
+                                "description": "I am a description",
+                                "user": "6291340f5089iu91fcede463",
+                                "editable": true,
+                                "createdAt": "2022-05-29T17:36:56.890Z",
+                                "updatedAt": "2022-05-29T17:36:56.890Z",
+                                "__v": 0
+                            }
+                        ]
+                    }
+                }
+            ],
+            "OTHER-ROUTES": [
+                {
+                    "Route": "https://notenet.es/api/getDestinations",
+                    "Method": "POST",
+                    "Description": "This route get all the possible destinations of the user",
+                    "Request": "Any",
+                    "Response": {
+                        "status": [
+                            "String, description of the process",
+                            "Array, all the destinations"
+                        ]
+                    },
+                    "Example": {
+                        "Request": {},
+                        "Response": {
+                            "status": [
+                                "Succesfully done",
+                                [
+                                    "Peter_Parker",
+                                    "Tony-Stark",
+                                    "Isabelle",
+                                    "Bruce.Wayne",
+                                    "TheRock_01"
+                                ]
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "ERROR-CODES":"Comming soon"
+}

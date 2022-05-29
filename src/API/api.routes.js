@@ -24,7 +24,7 @@ router.post('/api/notes/delete', DeleteNote)
 // create note
 router.post('/api/notes/create', CreateNote)
 // get all destinations
-router.post('/api/notes/getDestinations', GetAllDestinations) 
+router.post('/api/getDestinations', GetAllDestinations) 
 
 
 //* export

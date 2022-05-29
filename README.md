@@ -6,8 +6,8 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.1.7
-- More API features were created.(comming: docs for use api)
+## What's new? 2.0.1.8
+- API Docs avalible [here](https://notenet.es/api).
 
 
 ___
@@ -52,7 +52,7 @@ ___
 
 ## API Documentation
 
-* Comming
+[notenet.es/api](https://notenet.es/api)
 
 ___
 ___
