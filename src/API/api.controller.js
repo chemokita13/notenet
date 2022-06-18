@@ -1,6 +1,5 @@
 const Note = require('../models/note')
 const User = require('../models/user')
-const passport = require('passport')
 const { v4: uuidv4 } = require('uuid');
 const { getToken } = require('../config/jwt.config');
 const { getTemplateConfirm, sendEmailConfirm } = require('../config/mail.config');
@@ -335,7 +334,7 @@ apiCtrl.CreateNote = async (req, res) => { //* creates a note
             } else {
                 await newNote.save()
                 //console.log(newNote)
-                info[1].status = [true, "Note created successfully", newNote]
+                info[1].status = [true, "Note created successfully", newNote] 
             }
             //console.log(newNote)
 

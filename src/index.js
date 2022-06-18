@@ -1,7 +1,7 @@
 require('dotenv').config()
 
-const app = require('./server')
+
+const httpServer = require('./server')
 require('./db');
-app.listen(app.get('port'), ()=>{
-    console.log("server on port " + app.get('port'))
-})
+
+httpServer.listen(process.env.PORT || 3000, () => {console.log(`server on port ${process.env.PORT || 3000}`)});

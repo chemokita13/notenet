@@ -6,8 +6,8 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.1.8
-- API Docs avalible [here](https://notenet.es/api).
+## What's new? 2.0.2.8
+- API working with socket.io; (comming: API socket.io DOCS)
 
 
 ___
