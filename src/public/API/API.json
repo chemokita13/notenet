@@ -1,7 +1,9 @@
 {
     "API-Status": "working",
-    "API-Version": "1.0(alpha)",
+    "API-Version": "1.1(alpha)",
     "API-Description": "This is the API for the Todo App",
+    "API-Author": "@chemokita13 (github)",
+    "API-Support": "support@notenet.es",
     "Routes": [
         {
             "USER-ROUTES": [

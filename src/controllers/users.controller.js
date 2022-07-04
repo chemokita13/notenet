@@ -23,7 +23,7 @@ usersCtrl.signUp = async (req, res) => {
     if (password != password2) { errorscp.push({ text: 'Passwords do not match' }) } 
     if (password.length < 5) { errors.push({ text: "Pasword is too short" }) }
     if (name == '') { errorsnm.push({ text: "Username is necessary" }) }
-    if(name='none'||name=='administrador'||name=='any'||name.startsWith('admin')){errorsnm.push({text: "Username not valid, please, change it."})}
+    if(name=='none'||name=='administrador'||name=='any'||name.startsWith('admin')){errorsnm.push({text: "Username not valid, please, change it."})}
     if (email == '') { errorsem.push({ text: "E-mail is necessary" }) }
 
     // check what will send to the hbs page 

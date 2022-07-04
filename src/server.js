@@ -6,20 +6,13 @@ const method = require('method-override')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
-const { Router } = require('express');
+const {Router} = require('express');
+const { redirect } = require('express/lib/response');
 const router = Router();
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const sockets = require("./API/socketio");
 
 //* inits
 const app = express();
 require('./config/passport')
-// socket init
-const httpServer = createServer(app);
-const io = new Server(httpServer, {cors: {origin: '*'}})
-sockets(io)
-
 
 //* sets
 app.set('port', process.env.PORT || 5000)
@@ -30,17 +23,17 @@ app.engine('.hbs', exphbs.engine({
     pactialsDir: path.join(app.get('views'), 'parcials'),
     extname: '.hbs'
 }));
-app.set('view engine', '.hbs');
+app.set('view engine','.hbs');
 app.set('json spaces', 2)
 
 //* middlewares
-app.use(express.urlencoded({ extend: false }))
+app.use(express.urlencoded({extend: false}))
 app.use(morgan('dev'))
 app.use(method('_method'))
 app.use(session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true 
 }))
 app.use(flash(passport.initialize()))
 app.use(passport.session())
@@ -48,7 +41,7 @@ app.use(flash())
 app.use(express.json())
 
 //* global vars
-app.use((req, res, next) => {
+app.use((req, res, next)=>{
     res.locals.added_msg = req.flash('added_msg')
     res.locals.error_msg = req.flash('error_msg')
     res.locals.errorrd_msg = req.flash('errorrd_msg')
@@ -67,9 +60,8 @@ app.use(require('./API/api.routes'));
 //* static files
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(router.get(/^(.*)$/, (req,res)=>{
+    res.redirect('/')
+}))
 
-//app.use(router.get(/^(.*)$/, (req, res) => {
-//  res.redirect('/')
-//}))
-
-module.exports = httpServer;
+module.exports = app
