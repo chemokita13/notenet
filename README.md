@@ -6,9 +6,9 @@ A little social network.
 ___
 ___
 
-## What's new? 2.0.2.9
-- Some minor fixes
-- Socket.io API was deleted (API Docs avalible [here](https://notenet.es/api).)
+## What's new? 3.0
+-Ads removed
+-Proyect finisheds.
 
 ___
 ___
